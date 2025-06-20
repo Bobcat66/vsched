@@ -6,12 +6,7 @@ extern "C" {
 
 #include <stddef.h>
 
-typedef struct dynarray {
-    void* data;
-    size_t size;
-    size_t capacity;
-    size_t elemsize;
-} dynarray_t;
+typedef struct dynarray dynarray_t;
 
 /* 
 Creates a new dynarray with enough memory preallocated to fit the given capacity. 
@@ -29,6 +24,11 @@ do not dereference or free it
 void dynarray_destroy(dynarray_t* dynarray);
 
 /*
+Returns a pointer to the underlying memory block
+*/
+void* dynarray_data(dynarray_t* dynarray);
+
+/*
 Returns size of a dynarray
 */
 size_t dynarray_size(dynarray_t* dynarray);
@@ -42,6 +42,13 @@ size_t dynarray_capacity(dynarray_t* dynarray);
 Returns element size of a dynarray
 */
 size_t dynarray_elemsize(dynarray_t* dynarray);
+
+/*
+Returns a pointer to the end of the dynarray. 
+NOTE: this does NOT return a pointer to the
+last element of the dynarray
+*/
+void* dynarray_end(dynarray_t* dynarray);
 
 /*
 Reallocates a dynarray's buffer to free unused memory.
@@ -60,7 +67,7 @@ int dynarray_reserve(dynarray_t* dynarray, size_t new_capacity);
 Pushes element to the end of a dynarray, resizing if needed. 
 Returns 0 if successful, and an error code if not
 */
-int dynarray_push(dynarray_t* dynarray, void* element);
+int dynarray_push_back(dynarray_t* dynarray, void* element);
 
 /*
 Clears all elements of dynarray. Returns 0 if successful, and an error code if not
@@ -75,22 +82,38 @@ Note: If the element is deleted after this operation, dereferencing the pointer 
 */
 void* dynarray_get(dynarray_t* dynarray, ptrdiff_t index);
 
+/* 
+Moves a copy of the element at the specified index into out_element
+Negative indices index the dynarray from the end. e.g., -1 would return the last element in the array
+Returns 0 if successful, error code otherwise
+*/
+int dynarray_getcopy(dynarray_t* dynarray, ptrdiff_t index, void* out_element);
+
 /*
 Deletes the last element of the dynarray
 */
-int dynarray_del(dynarray_t* dynarray);
-
-/*
-Pops the top element off of the array and copies it to out_element. 
-Returns 0 on success, error code on failure
-*/
-int dynarray_pop(dynarray_t* dynarray, void* out_element);
+int dynarray_pop_back(dynarray_t* dynarray);
 
 /*
 Overwrites element at the given index. Returns 0 if operation was successful,
 returns error code otherwise
 */
 int dynarray_write(dynarray_t* dynarray, void* element, ptrdiff_t index);
+
+/*
+Inserts element at given index. The element previouslyu occupying the index,
+and all elements after it, are pushed forward. Negative indices index from the end, 
+and insertion occurs *before* the indexed element, as with positive indices.
+For example, index -1 inserts before the last element. Returns 0 if operation was successful,
+returns error code otherwise
+*/
+int dynarray_insert(dynarray_t* dynarray, void* element, ptrdiff_t index);
+
+/*
+Removes element at given index. Returns 0 if operation was successful,
+returns error code otherwise
+*/
+int dynarray_remove(dynarray_t* dynarray, ptrdiff_t index);
 
 #ifdef __cplusplus
 }
