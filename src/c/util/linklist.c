@@ -6,7 +6,7 @@
 
 typedef struct linked_list_node {
     void* data;
-    llnode_t* next;
+    struct linked_list_node* next;
 } llnode_t;
 
 struct linklist {
@@ -180,8 +180,8 @@ int linklist_remove(linklist_t* linklist, ptrdiff_t index) {
             prev = curr;
             curr = curr->next;
         }
-        llnode_t** pnxt = (!!(prev) ? &prev->next : &linklist->head);
-        *pnxt = curr->next;
+        llnode_t** prevnext = (prev ? &prev->next : &linklist->head);
+        *prevnext = curr->next;
         free(curr);
         linklist->size--;
         if (!(linklist->size)) {

@@ -7,15 +7,9 @@ extern "C" {
 #include "vsched/tasks/task.h"
 #include "vsched/util/dynarray.h"
 
-typedef struct sequential_task_group {
-    task_t task;
-    dynarray_t* tasks;
-} sequential_task_group_t;
+typedef struct sequential_task_group sequential_task_group_t;
 
-int sequential_task_group_add_task(
-    sequential_task_group_t* sequential_task_group,
-    task_t* task
-);
+sequential_task_group_t* sequential_task_group_create(task_t*[]);
 
 #ifdef __cplusplus
 }
