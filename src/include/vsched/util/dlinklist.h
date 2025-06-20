@@ -26,7 +26,7 @@ void* dlinklist_head(dlinklist_t* dlinklist);
 /*
 Returns the element at the end of the dlinklist. UB if the list is empty
 */
-void* linklist_tail(dlinklist_t* dlinklist);
+void* dlinklist_tail(dlinklist_t* dlinklist);
 
 /*
 Returns the size of the dlinklist

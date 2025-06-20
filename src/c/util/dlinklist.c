@@ -17,6 +17,8 @@ struct dlinklist {
 };
 
 static dllnode_t* dlinklist_node_at(dlinklist_t* dlinklist, ptrdiff_t index) {
+    // Support Python-like negative indexing: -1 is last, -size is first
+    // Don't adjust index before bounds checking
     if (VS_EXPECT(index < (ptrdiff_t)dlinklist->size && -index <= (ptrdiff_t)dlinklist->size)) {
         if (index < 0) index = dlinklist->size + index;
         dllnode_t* curr;
@@ -27,8 +29,7 @@ static dllnode_t* dlinklist_node_at(dlinklist_t* dlinklist, ptrdiff_t index) {
             }
         } else {
             curr = dlinklist->tail;
-            ptrdiff_t i = dlinklist->size-1
-            for (ptrdiff_t i = (ptrdiff_t)dlinklist->size; i >= index; i--) {
+            for (ptrdiff_t i = (ptrdiff_t)dlinklist->size-1; i > index; i--) {
                 curr = curr->prev;
             }
         }
@@ -104,6 +105,9 @@ int dlinklist_push_front(dlinklist_t* dlinklist, void* element) {
     if (!dlinklist->tail) {
         dlinklist->tail = node;
     }
+    if (node->next){
+        node->next->prev = node;
+    }
     dlinklist->size++;
     return 0;
 }
@@ -175,13 +179,12 @@ int dlinklist_insert(dlinklist_t* dlinklist, void* element, ptrdiff_t index) {
     node->next = nextnode;
     if (prevnode) {
         prevnode->next = node;
+    } else {
+        dlinklist->head = node;
     }
-    if (nextnode) {
-        nextnode->prev = node;
-    }
+    nextnode->prev = node;
     dlinklist->size++;
     return 0;
-
 }
 
 int dlinklist_remove(dlinklist_t* dlinklist, ptrdiff_t index) {
