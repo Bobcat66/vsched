@@ -19,12 +19,12 @@ Destroys a linklist. Note: does not destroy the elements
 void linklist_destroy(linklist_t* linklist);
 
 /*
-Returns the element at the beginning of the linklist
+Returns the element at the beginning of the linklist. UB if the list is empty
 */
 void* linklist_head(linklist_t* linklist);
 
 /*
-Returns the element at the end of the linklist
+Returns the element at the end of the linklist. UB if the list is empty
 */
 void* linklist_tail(linklist_t* linklist);
 
@@ -59,26 +59,17 @@ Removes the first element of the linklist
 void linklist_pop_front(linklist_t* linklist);
 
 /*
-Retrieves element at the given index. NOTE: while python-style
-negative indices are supported for consistency with the rest
-of the utility library, it is extremely resource intensive and 
-not recommended. Use a dlinklist instead. Returns NULL on failure
+Retrieves element at the given index.
 */
 void* linklist_get(linklist_t* linklist, ptrdiff_t index);
 
 /*
-Inserts element at the given index. NOTE: while python-style
-negative indices are supported for consistency with the rest
-of the utility library, it is extremely resource intensive and 
-not recommended. Use a dlinklist instead. Returns 0 if successful
+Inserts element at the given index.
 */
 int linklist_insert(linklist_t* linklist, void* element, ptrdiff_t index);
 
 /*
-Removes element at the given index. NOTE: while python-style
-negative indices are supported for consistency with the rest
-of the utility library, it is extremely resource intensive and 
-not recommended. Use a dlinklist instead. Returns 0 if successful
+Removes element at the given index.
 */
 int linklist_remove(linklist_t* linklist, ptrdiff_t index);
 
