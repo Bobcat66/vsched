@@ -1,1 +1,1 @@
-This is a simple, portable round-robin scheduler
+This is a simple, portable scheduler based on WPILib's command framework
