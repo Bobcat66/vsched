@@ -9,6 +9,23 @@ extern "C" {
 typedef struct dlinklist dlinklist_t;
 
 /*
+Iterator API
+------------
+Use `dlinklist_head()` to begin iteration, and `dlliter_next()` to advance.
+Use `dlliter_data()` to access the element.
+Use `dlinklist_tail()` and `dlliter_prev()` to iterate backwards.
+Iterators are invalidated by `dlliter_remove`, but it returns
+a new iterator which is valid for list traversal, as long as
+the nodes before and after the removed node are still valid and in their
+same relative positions. However, this new iterator is not valid for data retrieval
+*/
+typedef struct dlliter {
+    void* prev;
+    void* node;
+    void* next;
+} dlliter_t;
+
+/*
 Creates a dlinklist
 */
 dlinklist_t* dlinklist_create();
@@ -21,12 +38,12 @@ void dlinklist_destroy(dlinklist_t* dlinklist);
 /*
 Returns the element at the beginning of the dlinklist. UB if the list is empty
 */
-void* dlinklist_head(dlinklist_t* dlinklist);
+dlliter_t dlinklist_head(dlinklist_t* dlinklist);
 
 /*
 Returns the element at the end of the dlinklist. UB if the list is empty
 */
-void* dlinklist_tail(dlinklist_t* dlinklist);
+dlliter_t dlinklist_tail(dlinklist_t* dlinklist);
 
 /*
 Returns the size of the dlinklist
@@ -66,12 +83,33 @@ void* dlinklist_get(dlinklist_t* dlinklist, ptrdiff_t index);
 /*
 Inserts element at the given index.
 */
-int dlinklist_insert(dlinklist_t* linklist, void* element, ptrdiff_t index);
+int dlinklist_insert(dlinklist_t* dlinklist, void* element, ptrdiff_t index);
 
 /*
 Removes element at the given index.
 */
 int dlinklist_remove(dlinklist_t* dlinklist, ptrdiff_t index);
+
+/*
+Accesses element from iterator
+*/
+void* dlliter_data(dlliter_t dlliter);
+
+/*
+Returns next iterator
+*/
+dlliter_t dlliter_next(dlliter_t dlliter);
+
+/*
+Returns previous iterator
+*/
+dlliter_t dlliter_prev(dlliter_t dlliter);
+
+/*
+Removes element at iterator.
+*/
+dlliter_t dlliter_remove(dlinklist_t* dlinklist, dlliter_t dlliter);
+
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,7 @@
 #include "vsched/util/linklist.h"
 #include "vsched/vsdef.h"
 
+#include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
 
